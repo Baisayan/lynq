@@ -16,13 +16,11 @@ export default function CtaSection() {
           Ready to get things done?
         </h1>
 
-        {/* Subtitle */}
         <h2 className="text-xl sm:text-2xl md:text-3xl font-medium text-center text-muted-foreground mb-8 sm:mb-12 max-w-3xl mx-auto px-4 leading-relaxed">
           Join thousands of teams already using Lynq to manage their tasks and
           boost productivity.
         </h2>
 
-        {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center px-4">
           <Button
             size="lg"
