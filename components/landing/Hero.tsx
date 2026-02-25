@@ -2,25 +2,20 @@
 import { Button } from "@/components/ui/button";
 import { GithubIcon } from "lucide-react";
 
-export const HeroSection = () => {
+export default function Hero() {
   return (
     <div
-      className="HeroSection min-h-[calc(100vh-10rem)] w-full max-w-7xl mx-auto flex flex-col items-center justify-center px-4 pt-20 pb-10 md:pt-32 md:pb-20 relative"
-      data-hero-section
-    >
+      className="min-h-screen w-full max-w-7xl mx-auto flex flex-col items-center justify-center px-4 pt-20 pb-10 md:pt-32 md:pb-20 relative">
       <div className="relative z-10 text-center w-full">
-        {/* Main Title */}
         <h1 className="text-center text-3xl font-light tracking-tight text-foreground md:text-4xl lg:text-6xl mb-6">
           For Teams Who Ship Fast
         </h1>
 
-        {/* Description */}
         <p className="text-center text-sm font-medium tracking-tight text-muted-foreground md:text-sm lg:text-base mx-auto mt-6 max-w-lg mb-12">
           The task management platform that actually works. Beautiful,
           intuitive, and built for teams who ship.
         </p>
 
-        {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
           <Button
             size="lg"
@@ -49,4 +44,4 @@ export const HeroSection = () => {
       </div>
     </div>
   );
-};
+}
