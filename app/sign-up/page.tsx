@@ -12,6 +12,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Logo from "@/components/logo";
+import Image from "next/image";
 
 export default function SignUpPage() {
   const searchParams = useSearchParams();
@@ -35,21 +37,46 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4 bg-muted/50">
-      <Card className="w-full max-w-md shadow-lg">
-        <CardHeader>
-          <CardTitle>Stride</CardTitle>
-          <CardDescription>Create your account to get started</CardDescription>
+    <div className="flex min-h-screen items-center justify-center p-2 bg-muted/10">
+      <Card className="w-full max-w-md">
+        <CardHeader className="text-center">
+          <CardTitle className="flex justify-center items-center gap-1 tracking-wide text-2xl">
+            Welcome to
+            <span className="flex justify-center items-center gap-1 font-bold">
+              <Logo className="size-7" />
+              Stride
+            </span>
+          </CardTitle>
+          <CardDescription>
+            Built for teams that move work forward.
+          </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="grid">
           {error && (
-            <div className="rounded-md bg-destructive/15 border border-destructive/50 p-3 text-sm text-destructive">
+            <div className="rounded-md bg-destructive/15 border border-destructive/50 p-3 text-sm text-destructive mb-6">
               {error}
             </div>
           )}
 
-          <Button type="button" onClick={handleGoogleSignUp} disabled={loading}>
-            {loading ? "Signing up..." : "Sign up with Google"}
+          <p className="text-center mb-4 text-muted-foreground">
+            Create your account to get started
+          </p>
+
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleGoogleSignUp}
+            className="py-5 text-base mb-4"
+            disabled={loading}
+          >
+            {loading ? (
+              "Signing up..."
+            ) : (
+              <div className="flex gap-3 font-semibold">
+                Sign up with Google
+                <Image src="/google.svg" alt="Google" width={20} height={20} />
+              </div>
+            )}
           </Button>
 
           <div className="text-center text-sm text-muted-foreground">

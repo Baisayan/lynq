@@ -12,7 +12,7 @@ export default function SignInPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Check if user is already logged in and redirect if needed
+  // Check if user logged in and redirect if needed
   useEffect(() => {
     const checkSession = async () => {
       try {
@@ -22,7 +22,6 @@ export default function SignInPage() {
           router.push(redirectUrl);
         }
       } catch (error) {
-        // Session check failed, allow user to stay on sign-in page
         console.error("Session check error:", error);
       }
     };
