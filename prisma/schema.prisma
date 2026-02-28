@@ -75,11 +75,15 @@ model Verification {
 model Team {
   id         String   @id @default(cuid())
   name       String
-  key        String   @unique // 3-letter team identifier (e.g., "ENG", "DES")
+  key        String   @unique // 3-letter team identifier
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
   members           TeamMember[]
+  projects          Project[]
+  workflowStates    WorkflowState[]
+  labels            Label[]
+  issues            Issue[]
 
   @@map("teams")
 }
@@ -100,8 +104,164 @@ model TeamMember {
   @@map("team_members")
 }
 
+model Project {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  key         String
+  color       String   @default("#6366f1")
+  icon        String?
+  status      ProjectStatus   @default(active)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  leadId String?
+
+  issues  Issue[]
+  members ProjectMember[]
+
+  @@unique([teamId, key])
+  @@index([teamId])
+  @@map("projects")
+}
+
+model WorkflowState {
+  id        String   @id @default(cuid())
+  name      String
+  type      WorkflowStateType
+  color     String   @default("#64748b")
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  issues Issue[]
+
+  @@unique([teamId, name])
+  @@unique([teamId, position])
+  @@index([teamId])
+  @@map("workflow_states")
+}
+
+model Label {
+  id        String   @id @default(cuid())
+  name      String
+  color     String   @default("#64748b")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  issues IssueLabel[]
+
+  @@unique([teamId, name])
+  @@index([teamId])
+  @@map("labels")
+}
+
+model Issue {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  number      Int
+  priority    IssuePriority    @default(medium)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  completedAt DateTime?
+
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  workflowStateId String
+  workflowState   WorkflowState @relation(fields: [workflowStateId], references: [id])
+
+  assigneeId String?
+  creatorId String
+
+  comments Comment[]
+  labels   IssueLabel[]
+
+  @@unique([teamId, number])
+  @@index([teamId])
+  @@index([projectId])
+  @@index([workflowStateId])
+  @@index([assigneeId])
+  @@map("issues")
+}
+
+model IssueLabel {
+  createdAt DateTime @default(now())
+  issueId String
+  issue   Issue  @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  labelId String
+  label   Label  @relation(fields: [labelId], references: [id], onDelete: Cascade)
+
+  @@unique([issueId, labelId])
+  @@map("issue_labels")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  issueId String
+  issue   Issue  @relation(fields: [issueId], references: [id], onDelete: Cascade)
+
+  userId String
+
+  @@index([issueId])
+  @@index([userId])
+  @@map("comments")
+}
+
+model ProjectMember {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  userId    String
+
+  @@unique([projectId, userId])
+  @@index([userId])
+  @@map("project_members")
+}
+
 enum TeamRole {
   developer
   admin
   viewer
+}
+
+enum ProjectStatus {
+  active
+  completed
+  canceled
+}
+
+enum WorkflowStateType {
+  backlog
+  todo
+  in_progress
+  done
+  canceled
+}
+
+enum IssuePriority {
+  low
+  medium
+  high
+  urgent
 }
